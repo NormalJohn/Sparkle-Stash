@@ -1,0 +1,19 @@
+name: MissAV去广告
+desc: https://missav.ai
+rules:
+- DOMAIN,creative.myavlive.com,REJECT,pre-matching
+- DOMAIN-SUFFIX,trackwilltrk.com,REJECT,pre-matching
+- DOMAIN-SUFFIX,tsyndicate.com,REJECT,pre-matching
+http:
+  script:
+  - name: sparkle.webpage.missav.js
+    type: response
+    match: ^https:\/\/missav\.ai\/(?!favicon)(?!(build|fonts|img|js|api|cdn-cgi)\/).
+    require-body: true
+    engine: webkit
+  mitm:
+  - missav.ai
+script-providers:
+  sparkle.webpage.missav.js:
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/1d335a8188b0126df2148ec778fa04497d1ff3f90afd3678055780c99c0bad1c/scripts/webpage.missav.js'
+    interval: 86400

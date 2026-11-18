@@ -1,0 +1,39 @@
+name: Block
+desc: 屏蔽特定协议 & 端口 & 域名
+arguments-version: 1
+arguments:
+  stun:
+    title: STUN
+    type: select
+    default: OR
+    options:
+    - value: OR
+      label: 开启
+    - value: AND
+      label: 关闭
+  ad_domains:
+    title: 通用域名
+    type: select
+    default: OR
+    options:
+    - value: OR
+      label: 开启
+    - value: AND
+      label: 关闭
+  system_update:
+    title: 系统更新
+    type: select
+    default: AND
+    options:
+    - value: OR
+      label: 开启
+    - value: AND
+      label: 关闭
+rules:
+- AND,((PROTOCOL,STUN),(${args.stun},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT
+- AND,((DOMAIN,www.googleadservices.com),(${args.ad_domains},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT,pre-matching
+- AND,((DOMAIN,googleads.g.doubleclick.net),(${args.ad_domains},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT,pre-matching
+- AND,((DOMAIN,mesu.apple.com),(${args.system_update},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT-DROP
+- AND,((DOMAIN,gdmf.apple.com),(${args.system_update},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT-DROP
+- AND,((DOMAIN,updates-http.cdn-apple.com),(${args.system_update},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT-DROP
+- AND,((DOMAIN,xp.apple.com),(${args.system_update},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT-DROP

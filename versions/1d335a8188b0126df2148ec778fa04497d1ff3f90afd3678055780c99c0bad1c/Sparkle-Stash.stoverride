@@ -1,0 +1,270 @@
+name: Sparkle-Stash
+desc: 哔哩哔哩、YouTube、微博轻享版与常用应用去广告
+arguments:
+  display_up_list:
+    title: 动态最常访问
+    type: select
+    default: auto
+    options:
+    - value: auto
+    - value: show
+    - value: hide
+  creator_hub:
+    title: 创作中心
+    type: switch
+    default: false
+  purify_comment:
+    title: 过滤置顶评论广告
+    type: switch
+    default: true
+  optimize_comments:
+    title: 优化评论区加载
+    type: switch
+    default: true
+  sponsor_block:
+    title: 空降助手
+    type: switch
+    default: true
+  sponsor_policy:
+    title: 空降助手策略
+    type: input
+    default: DIRECT
+    required: true
+  block_p2p:
+    title: 屏蔽P2P
+    type: select
+    default: OR
+    options:
+    - value: OR
+      label: 开启
+    - value: AND
+      label: 关闭
+  log_level:
+    title: 日志等级
+    type: select
+    default: '4'
+    options:
+    - value: '1'
+    - value: '2'
+    - value: '3'
+    - value: '4'
+    - value: '5'
+  block_upload:
+    title: 屏蔽上传按钮
+    type: switch
+    default: true
+  block_immersive:
+    title: 屏蔽选段按钮
+    type: switch
+    default: true
+  block_shorts:
+    title: 屏蔽Shorts按钮
+    type: switch
+    default: true
+  caption_lang:
+    title: 字幕翻译语言
+    type: input
+    default: 'off'
+    required: true
+  debug:
+    title: 启用调试模式
+    type: switch
+    default: false
+http:
+  mock:
+  - match: ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/list\?
+    headers:
+      content-type: application/json
+    text: '{"code":0,"message":"OK","ttl":1,"data":{"max_time":0,"min_interval":31536000,"pull_interval":31536000,"keep_ids":[],"show":[],"list":[{}],"splash_request_id":""}}'
+  - match: ^https:\/\/ap[ip]\.bilibili\.com\/x\/(?:resource\/(?:top\/activity|patch\/tab(?:\/v2)?)|v2\/search\/square|vip\/ads\/materials)\?
+    headers:
+      content-type: application/json
+    text: '{"code":-404,"message":"-404","ttl":1,"data":null}'
+  - match: ^https:\/\/api\.bilibili\.com\/pgc\/activity\/deliver\/material\/receive\?
+    headers:
+      content-type: application/json
+    text: '{"code":0,"data":{"closeType":"close_win","container":[],"showTime":""},"message":"success"}'
+  - match: ^https:\/\/api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info\?
+    headers:
+      content-type: application/json
+    text: '{}'
+  - match: ^https:\/\/line3-h5-mobile-api\.biligame\.com\/game\/live\/large_card_material\?
+    headers:
+      content-type: application/json
+    text: '{"code":0,"message":"success"}'
+  - match: ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus$
+    headers:
+      content-type: application/grpc
+      grpc-status: '0'
+    base64: AAAAABMKEQgCEgl0ZWVuYWdlcnMgAioA
+  - match: ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.interface\.v1\.Search\/DefaultWords$
+    headers:
+      content-type: application/grpc
+      grpc-status: '0'
+    base64: AAAAACEaHeaQnOe0ouinhumikeOAgeeVquWJp+aIlnVw5Li7KAE=
+  - match: ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.(?:view\.v1\.View\/TFInfo|viewunite\.v1\.View\/(?:PlayPause|ViewEndPage))$
+    headers:
+      content-type: application/grpc
+      grpc-status: '0'
+    base64: AAAAAAA=
+  - match: ^https:\/\/manga\.bilibili\.com\/twirp\/comic\.v1\.Comic\/(Flash|ListFlash|GetActivityTab|GetBubbles)\?
+    headers:
+      content-type: application/json
+    text: '{}'
+  - match: ^https?:\/\/api\.weibo\.cn\/2\/ad\/weibointl\?
+    headers:
+      content-type: application/json
+    text: '{}'
+  - match: ^https?:\/\/weibointl\.api\.weibo\.cn\/portal\.php\?a=get_searching_info&
+    headers:
+      content-type: text/html
+    text: '{"retcode":0,"info":"","data":{"expiration_time":"86400","cards":[{"tip":"搜索微博","word":""}]}}'
+  - match: ^https?:\/\/weibointl\.api\.weibo\.cn\/portal\.php\?ct=feed&a=search_topic&
+    headers:
+      content-type: text/html
+    text: '{"retcode":0,"info":"","data":[],"ext":{}}'
+  body-rewrite:
+  - ^http:\/\/[^?]+\/resolve\?host=(?:ap[ip]\.bilibili\.com|grpc\.biliapi\.net|api\.live\.bilibili\.com) response-jq .dns[]? |= (.ips = [] | .ttl = 86400)
+  - ^https:\/\/api\.live\.bilibili\.com\/xlive\/open-interface\/v2\/tracker\/conf\? response-jq .data.domains = ["wss://tracker.chat.bilibili.com"]
+  - ^https:\/\/api\.bilibili\.com\/x\/pd-proxy\/tracker\? response-jq .data[][]? = "stun.chat.bilibili.com:3478"
+  - ^https:\/\/api\.bilibili\.com\/pgc\/view\/v2\/app\/season\? response-jq del(.data.payment)
+  - ^https:\/\/api\.bilibili\.com\/pgc\/page\/channel\? response-jq .data.modules |= map(select(.type != "TIP") | if .type == "BANNER" then .module_data.items |= map(select(.url | startswith("https://www.bilibili.com/blackboard/era/") | not)) else . end)
+  - ^https:\/\/manga\.bilibili\.com\/twirp\/comic\.v1\.(Comic\/AppInit|Home\/HomeFeed)\? response-jq .data as $data | .data[("activity_tab", "flash", "operate") | select($data[.])] = null | if .data.feeds then .data.feeds |= map(select(.type | IN(15, 30) | not)) end
+  - ^https:\/\/res\.kfc\.com\.cn\/CRM\/kfcad\/apphome6\/apphome.*\.json response-jq del(.data.app6_bootStrapAd)
+  - ^https?:\/\/api\.weibo\.cn\/2\/statuses\/unread_hot_timeline$ response-jq del(.ad, .advertises, .trends) | if .statuses then .statuses |= map(select(((.promotion.type == "ad") or (.mblogtypename | IN("广告", "廣告", "热推", "熱推"))) | not)) end
+  - ^https?:\/\/weibointl\.api\.weibo\.cn\/portal\.php\?a=get_coopen_ads& response-jq .data |= . + {"ad_list":[],"pic_ad":[],"gdt_video_ad_ios":[],"display_ad":0,"ad_ios_id":null,"app_ad_ios_id":null,"reserve_ad_ios_id":"","reserve_app_ad_ios_id":"","ad_duration":604800,"ad_cd_interval":604800}
+  - ^https?:\/\/weibointl\.api\.weibo\.cn\/portal\.php\?a=trends& response-jq if .data.order then .data.order = ["search_topic"] end
+  - ^https?:\/\/weibointl\.api\.weibo\.cn\/portal\.php\?a=search_topic& response-jq if .data.search_topic.cards[0].type == "searchtop" then del(.data.search_topic.cards[0]) end
+  - ^https?:\/\/weibointl\.api\.weibo\.cn\/portal\.php\?a=user_center& response-jq if .data.cards then .data.cards[].items |= map(select(.type != "personal_vip")) | .data.cards |= map(select((.items | length) > 0)) end
+  script:
+  - name: sparkle.bilibili.protobuf.request.js
+    timeout: 10
+    type: request
+    match: ^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(?:app\.viewunite\.v1\.View\/View|main\.community\.reply\.v1\.Reply\/MainList)$
+    require-body: true
+    binary-mode: true
+    engine: webkit
+    argument: '{"purifyComment":${args.purify_comment|json},"logLevel":${args.log_level|json},"enabled":${args.optimize_comments|json}}'
+  - name: sparkle.bilibili.protobuf.request.js
+    timeout: 10
+    type: request
+    match: ^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(?:community\.service\.dm\.v1\.DM\/DmSegMobile|app\.view(?:unite)?\.v1\.View\/ViewProgress)$
+    require-body: true
+    binary-mode: true
+    engine: webkit
+    argument: '{"logLevel":${args.log_level|json},"enabled":${args.sponsor_block|json}}'
+  - name: sparkle.bili-suit-diy.js
+    type: response
+    match: ^https:\/\/app\.bilibili\.com\/x\/resource\/show\/skin\?
+    require-body: true
+    engine: webkit
+  - name: sparkle.bilibili.json.js
+    type: response
+    match: ^https:\/\/app\.bilibili\.com\/x\/(?:resource\/show\/tab\/v2|v2\/(?:splash\/(?:show|event\/list2)|feed\/index(?:\/story)?|account\/(?:mine(?:\/ipad)?|myinfo)))\?
+    require-body: true
+    engine: webkit
+    argument: '{"showCreatorHub":${args.creator_hub|json}}'
+  - name: sparkle.bilibili.json.js
+    type: response
+    match: ^https:\/\/api\.live\.bilibili\.com\/xlive\/(?:app-interface\/v2\/index\/feed|app-room\/v1\/index\/getInfoBy(?:Room|User))\?
+    require-body: true
+    engine: webkit
+  - name: sparkle.webpage.bilibili.js
+    type: response
+    match: ^https:\/\/www\.bilibili\.com\/blackboard\/era\/[^?]+\.html\?
+    require-body: true
+    engine: webkit
+  - name: sparkle.bilibili.protobuf.response.js
+    type: response
+    match: ^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(?:app\.(?:show\.v1\.Popular\/Index|dynamic\.v2\.Dynamic\/DynAll|view(?:unite)?\.v1\.View\/(?:View|ViewProgress|RelatesFeed|AIRelateAsync)|playurl\.v1\.PlayURL\/PlayView|playerunite\.v1\.Player\/PlayViewUnite)|polymer\.app\.search\.v1\.Search\/SearchAll|community\.service\.dm\.v1\.DM\/DmView|main\.community\.reply\.v1\.Reply\/MainList|pgc\.gateway\.player\.v2\.PlayURL\/PlayView)$
+    require-body: true
+    binary-mode: true
+    engine: webkit
+    argument: '{"displayUpList":${args.display_up_list|json},"purifyComment":${args.purify_comment|json},"sponsorBlock":${args.sponsor_block|json},"logLevel":${args.log_level|json}}'
+  - name: sparkle.youtube.response.js
+    type: response
+    match: ^https:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch|log_event|config))(\?(.*))?$
+    require-body: true
+    binary-mode: true
+    argument: '{"captionLang":${args.caption_lang|json},"blockUpload":${args.block_upload|json},"blockImmersive":${args.block_immersive|json},"blockShorts":${args.block_shorts|json},"debug":${args.debug|json}}'
+  - name: sparkle.youtube.request.js
+    type: request
+    match: ^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&ack.*
+    require-body: true
+    binary-mode: true
+    argument: '{"captionLang":${args.caption_lang|json}}'
+  - name: sparkle.youtube.request.js
+    type: request
+    match: ^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/log_event
+    require-body: true
+    binary-mode: true
+  - name: sparkle.12306.js
+    type: request
+    match: ^https:\/\/ad\.12306\.cn\/ad\/ser\/getAdList$
+    require-body: true
+    engine: webkit
+  - name: sparkle.12306.js
+    type: request
+    match: ^https:\/\/mobile\.12306\.cn\/otsmobile\/app\/mgs\/mgw\.htm$
+    require-body: false
+    engine: webkit
+  mitm:
+  - grpc.biliapi.net
+  - app.bilibili.com
+  - api.bilibili.com
+  - api.live.bilibili.com
+  - www.bilibili.com
+  - line3-h5-mobile-api.biligame.com
+  - manga.bilibili.com
+  - '*.googlevideo.com'
+  - youtubei.googleapis.com
+  - pan.baidu.com
+  - client.app.coc.10086.cn
+  - portal.zjzwfw.gov.cn
+  - res.kfc.com.cn
+  - api.weibo.cn
+  - weibointl.api.weibo.cn
+  - ad.12306.cn
+  - mobile.12306.cn
+  url-rewrite:
+  - ^https?:\/\/pan\.baidu\.com\/(act\/(api\/activityentry|v2\/(bchannel|welfare)\/list)|rest\/2\.0\/pcs\/ad) - reject
+  - ^https?:\/\/client\.app\.coc\.10086\.cn\/biz-orange\/DN\/(init\/startInit|emotionMarket) - reject
+  - ^https?:\/\/portal\.zjzwfw\.gov\.cn\/app_api\/appHome\/selectStartPic - reject
+script-providers:
+  sparkle.bilibili.protobuf.request.js:
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/1d335a8188b0126df2148ec778fa04497d1ff3f90afd3678055780c99c0bad1c/scripts/bilibili.protobuf.request.js'
+    interval: 86400
+  sparkle.bili-suit-diy.js:
+    url: https://raw.githubusercontent.com/kokoryh/Script/d8afcfab97fbfb3d017cfdc759ac7c9c8d784b0d/js/bili-suit-diy.js
+    interval: 86400
+  sparkle.bilibili.json.js:
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/1d335a8188b0126df2148ec778fa04497d1ff3f90afd3678055780c99c0bad1c/scripts/bilibili.json.js'
+    interval: 86400
+  sparkle.webpage.bilibili.js:
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/1d335a8188b0126df2148ec778fa04497d1ff3f90afd3678055780c99c0bad1c/scripts/webpage.bilibili.js'
+    interval: 86400
+  sparkle.bilibili.protobuf.response.js:
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/1d335a8188b0126df2148ec778fa04497d1ff3f90afd3678055780c99c0bad1c/scripts/bilibili.protobuf.response.js'
+    interval: 86400
+  sparkle.youtube.response.js:
+    url: https://raw.githubusercontent.com/Maasea/sgmodule/65075cdb388fc5e3094afd7e7314c67b243f3525/Script/Youtube/youtube.response.js
+    interval: 86400
+  sparkle.youtube.request.js:
+    url: https://raw.githubusercontent.com/Maasea/sgmodule/65075cdb388fc5e3094afd7e7314c67b243f3525/Script/Youtube/youtube.request.js
+    interval: 86400
+  sparkle.12306.js:
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/1d335a8188b0126df2148ec778fa04497d1ff3f90afd3678055780c99c0bad1c/scripts/12306.js'
+    interval: 86400
+rules:
+- DOMAIN,bsbsb.top,${args.sponsor_policy}
+- DOMAIN,dns.google,REJECT,pre-matching
+- DOMAIN,api.biliapi.com,REJECT,pre-matching
+- DOMAIN,app.biliapi.com,REJECT,pre-matching
+- DOMAIN,api.biliapi.net,REJECT,pre-matching
+- DOMAIN,app.biliapi.net,REJECT,pre-matching
+- AND,((DOMAIN-SUFFIX,chat.bilibili.com), (OR,((DOMAIN-KEYWORD,stun), (DOMAIN-KEYWORD,tracker), (DOMAIN-KEYWORD,p2p)))),REJECT,pre-matching
+- AND,((DST-PORT,4480),(${args.block_p2p},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT,pre-matching
+- AND,((DST-PORT,4483),(${args.block_p2p},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT,pre-matching
+- AND,((DST-PORT,9102),(${args.block_p2p},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT,pre-matching
+- DOMAIN-SUFFIX,biz.weibo.com,REJECT,pre-matching
+arguments-version: 1

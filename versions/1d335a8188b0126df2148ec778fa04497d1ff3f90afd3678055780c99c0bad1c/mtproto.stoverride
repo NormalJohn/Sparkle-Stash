@@ -1,0 +1,31 @@
+name: MTProto
+desc: 优化 Telegram 转圈问题
+arguments-version: 1
+arguments:
+  port:
+    title: port
+    type: input
+    default: 5753
+    value-type: integer
+    minimum: 1
+    maximum: 65535
+  secret:
+    title: secret
+    type: input
+    required: true
+    min-length: 32
+    max-length: 34
+  ipv6:
+    title: ipv6
+    type: switch
+    default: false
+  dc_config_url:
+    title: dc-config-url
+    type: input
+    default: https://ruleset.skk.moe/Internal/mtproto-dc-config.json
+    required: true
+mtproto:
+  port: ${args.port}
+  secret: ${args.secret}
+  ipv6: ${args.ipv6}
+  dc-config-url: ${args.dc_config_url}

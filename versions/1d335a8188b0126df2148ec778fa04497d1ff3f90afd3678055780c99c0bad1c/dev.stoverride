@@ -1,0 +1,14 @@
+name: Development Mode
+desc: Redirect to the specified refName
+arguments-version: 1
+arguments:
+  refname:
+    title: refname
+    type: input
+    default: refs/heads/dev
+    required: true
+http:
+  url-rewrite:
+  - ^https:\/\/raw\.githubusercontent\.com\/kokoryh\/Sparkle\/refs\/heads\/master https://raw.githubusercontent.com/kokoryh/Sparkle/${args.refname} 302
+  mitm:
+  - raw.githubusercontent.com

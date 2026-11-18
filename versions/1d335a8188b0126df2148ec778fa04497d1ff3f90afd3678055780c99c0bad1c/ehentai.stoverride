@@ -1,0 +1,18 @@
+name: E-Hentai增强
+desc: https://e-hentai.org
+http:
+  url-rewrite:
+  - ^https:\/\/exhentai\.org https://e-hentai.org 307
+  script:
+  - name: sparkle.webpage.ehentai.js
+    type: response
+    match: ^https:\/\/e-hentai\.org\/g\/
+    require-body: true
+    engine: webkit
+  mitm:
+  - e-hentai.org
+  - exhentai.org
+script-providers:
+  sparkle.webpage.ehentai.js:
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/1d335a8188b0126df2148ec778fa04497d1ff3f90afd3678055780c99c0bad1c/scripts/webpage.ehentai.js'
+    interval: 86400
