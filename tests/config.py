@@ -21,6 +21,7 @@ for module, config in configs.items():
     http = config.get("http", {})
     providers = config.get("script-providers", {})
     specs = config.get("arguments", {})
+    assert all(spec["description"].strip() for spec in specs.values()), module
     if module != "Sparkle-Stash":
         _, original = read_module(source / f"{module}.sgmodule")
         for section, key in (("Map Local", "mock"), ("Body Rewrite", "body-rewrite"), ("URL Rewrite", "url-rewrite")):
@@ -62,6 +63,11 @@ for module, config in configs.items():
         re.compile(pattern)
         assert kind == "response-jq"
         subprocess.run(["jq", "-n", "if false then (" + expression + ") else null end"], check=True, capture_output=True)
+
+for module in ("bilibili", "Sparkle-Stash"):
+    sponsor_policy = configs[module]["arguments"]["sponsor_policy"]
+    assert sponsor_policy["default"] == "DIRECT"
+    assert all(term in sponsor_policy["description"] for term in ("DIRECT", "策略组", "bsbsb.top"))
 
 kfc = configs["block-ad"]["http"]["body-rewrite"][0].split(" ", 2)[2]
 result = subprocess.check_output(["jq", "-c", kfc], input=b'{"data":{"app6_bootStrapAd":1,"keep":2}}')

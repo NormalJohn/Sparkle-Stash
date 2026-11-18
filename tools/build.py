@@ -40,6 +40,37 @@ PARAMS = {
 }
 
 
+PARAMETER_DESCRIPTIONS = {
+    "动态最常访问": "auto：仅在列表中有正在直播的 UP 主时显示。show：始终显示。hide：始终隐藏。",
+    "创作中心": "开启后，在哔哩哔哩个人中心显示创作中心入口。",
+    "过滤置顶评论广告": "开启后，过滤哔哩哔哩评论区中的置顶广告。",
+    "优化评论区加载": "开启后，通过请求脚本处理视频详情和主评论列表；关闭后仍可进行响应改写。",
+    "空降助手": "开启后，使用哔哩哔哩 SponsorBlock（空降助手）处理视频的赞助片段。",
+    "空降助手策略": (
+        "设置空降助手域名 bsbsb.top 的出站策略。填 DIRECT 表示直连（默认）。"
+        "想走代理时，填写当前 Stash 配置里已有的代理策略组名称，例如「节点选择」"
+        "（仅当该组实际存在时），名称需完全一致。"
+    ),
+    "屏蔽P2P": "开启后，拦截哔哩哔哩覆写中的 P2P 目标端口 4480、4483 和 9102。",
+    "日志等级": "1：DEBUG。2：INFO。3：WARN。4：ERROR（默认）。5：OFF（关闭日志）。",
+    "屏蔽上传按钮": "开启后，隐藏 YouTube 的上传按钮。",
+    "屏蔽选段按钮": "开启后，隐藏 YouTube 的选段按钮。",
+    "屏蔽Shorts按钮": "开启后，隐藏 YouTube 的 Shorts 按钮。",
+    "字幕翻译语言": "填写目标语言代码，例如 zh-CN、en 或 ja。填 off 关闭字幕翻译。",
+    "启用调试模式": "开启后，输出更多 YouTube 增强脚本日志。",
+    "STUN": "开启后，拦截使用 STUN 协议的连接。",
+    "通用域名": "开启后，拦截本覆写列出的 Google 广告域名。",
+    "系统更新": "开启后，拦截本覆写列出的 Apple 系统更新域名。",
+    "refname": "原 Sparkle 资源重定向到的 Git 引用，例如 refs/heads/dev。",
+    "SubStore同步": "填写五段式 Cron 表达式。默认每天 05:00 执行 Sub-Store 同步。",
+    "毛怪俱乐部签到": "填写五段式 Cron 表达式。默认每天 02:55 执行签到。",
+    "port": "填写 Stash MTProto 服务的监听端口。",
+    "secret": "填写自己生成的 32 位十六进制 MTProto 密钥，可加 dd 前缀启用随机填充。",
+    "ipv6": "开启后仅连接 Telegram 数据中心的 IPv6 地址；关闭后使用 IPv4。",
+    "dc-config-url": "填写用于更新 Telegram 数据中心地址表的 HTTP 或 HTTPS URL。",
+}
+
+
 def arg(name, *, json_value=False):
     suffix = "|json" if json_value else ""
     return "${args." + PARAMS[name][0] + suffix + "}"
@@ -47,7 +78,7 @@ def arg(name, *, json_value=False):
 
 def parameter(name, default):
     key, choices = PARAMS[name]
-    result = {"title": name}
+    result = {"title": name, "description": PARAMETER_DESCRIPTIONS[name]}
     if choices in (["OR", "AND"], ["AND", "OR"]):
         enabled = default != "#"
         result.update(type="select", default="OR" if enabled else "AND", options=[
