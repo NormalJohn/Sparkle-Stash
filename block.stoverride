@@ -4,6 +4,7 @@ arguments-version: 1
 arguments:
   stun:
     title: STUN
+    description: 开启后，拦截使用 STUN 协议的连接。
     type: select
     default: OR
     options:
@@ -13,6 +14,7 @@ arguments:
       label: 关闭
   ad_domains:
     title: 通用域名
+    description: 开启后，拦截本覆写列出的 Google 广告域名。
     type: select
     default: OR
     options:
@@ -22,6 +24,7 @@ arguments:
       label: 关闭
   system_update:
     title: 系统更新
+    description: 开启后，拦截本覆写列出的 Apple 系统更新域名。
     type: select
     default: AND
     options:

@@ -4,6 +4,7 @@ arguments-version: 1
 arguments:
   refname:
     title: refname
+    description: 原 Sparkle 资源重定向到的 Git 引用，例如 refs/heads/dev。
     type: input
     default: refs/heads/dev
     required: true

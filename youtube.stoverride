@@ -4,23 +4,28 @@ arguments-version: 1
 arguments:
   block_upload:
     title: 屏蔽上传按钮
+    description: 开启后，隐藏 YouTube 的上传按钮。
     type: switch
     default: true
   block_immersive:
     title: 屏蔽选段按钮
+    description: 开启后，隐藏 YouTube 的选段按钮。
     type: switch
     default: true
   block_shorts:
     title: 屏蔽Shorts按钮
+    description: 开启后，隐藏 YouTube 的 Shorts 按钮。
     type: switch
     default: true
   caption_lang:
     title: 字幕翻译语言
+    description: 填写目标语言代码，例如 zh-CN、en 或 ja。填 off 关闭字幕翻译。
     type: input
     default: 'off'
     required: true
   debug:
     title: 启用调试模式
+    description: 开启后，输出更多 YouTube 增强脚本日志。
     type: switch
     default: false
 http:

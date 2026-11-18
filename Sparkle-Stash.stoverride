@@ -3,6 +3,7 @@ desc: 哔哩哔哩、YouTube、微博轻享版与常用应用去广告
 arguments:
   display_up_list:
     title: 动态最常访问
+    description: auto：仅在列表中有正在直播的 UP 主时显示。show：始终显示。hide：始终隐藏。
     type: select
     default: auto
     options:
@@ -11,27 +12,33 @@ arguments:
     - value: hide
   creator_hub:
     title: 创作中心
+    description: 开启后，在哔哩哔哩个人中心显示创作中心入口。
     type: switch
     default: false
   purify_comment:
     title: 过滤置顶评论广告
+    description: 开启后，过滤哔哩哔哩评论区中的置顶广告。
     type: switch
     default: true
   optimize_comments:
     title: 优化评论区加载
+    description: 开启后，通过请求脚本处理视频详情和主评论列表；关闭后仍可进行响应改写。
     type: switch
     default: true
   sponsor_block:
     title: 空降助手
+    description: 开启后，使用哔哩哔哩 SponsorBlock（空降助手）处理视频的赞助片段。
     type: switch
     default: true
   sponsor_policy:
     title: 空降助手策略
+    description: 设置空降助手域名 bsbsb.top 的出站策略。填 DIRECT 表示直连（默认）。想走代理时，填写当前 Stash 配置里已有的代理策略组名称，例如「节点选择」（仅当该组实际存在时），名称需完全一致。
     type: input
     default: DIRECT
     required: true
   block_p2p:
     title: 屏蔽P2P
+    description: 开启后，拦截哔哩哔哩覆写中的 P2P 目标端口 4480、4483 和 9102。
     type: select
     default: OR
     options:
@@ -41,6 +48,7 @@ arguments:
       label: 关闭
   log_level:
     title: 日志等级
+    description: 1：DEBUG。2：INFO。3：WARN。4：ERROR（默认）。5：OFF（关闭日志）。
     type: select
     default: '4'
     options:
@@ -51,23 +59,28 @@ arguments:
     - value: '5'
   block_upload:
     title: 屏蔽上传按钮
+    description: 开启后，隐藏 YouTube 的上传按钮。
     type: switch
     default: true
   block_immersive:
     title: 屏蔽选段按钮
+    description: 开启后，隐藏 YouTube 的选段按钮。
     type: switch
     default: true
   block_shorts:
     title: 屏蔽Shorts按钮
+    description: 开启后，隐藏 YouTube 的 Shorts 按钮。
     type: switch
     default: true
   caption_lang:
     title: 字幕翻译语言
+    description: 填写目标语言代码，例如 zh-CN、en 或 ja。填 off 关闭字幕翻译。
     type: input
     default: 'off'
     required: true
   debug:
     title: 启用调试模式
+    description: 开启后，输出更多 YouTube 增强脚本日志。
     type: switch
     default: false
 http:
@@ -232,19 +245,19 @@ http:
   - ^https?:\/\/portal\.zjzwfw\.gov\.cn\/app_api\/appHome\/selectStartPic - reject
 script-providers:
   sparkle.bilibili.protobuf.request.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/1d335a8188b0126df2148ec778fa04497d1ff3f90afd3678055780c99c0bad1c/scripts/bilibili.protobuf.request.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/aba5982c696e6049553413bc20d380c4820f65c1f657c0e1219f9d893b2d2fcf/scripts/bilibili.protobuf.request.js'
     interval: 86400
   sparkle.bili-suit-diy.js:
     url: https://raw.githubusercontent.com/kokoryh/Script/d8afcfab97fbfb3d017cfdc759ac7c9c8d784b0d/js/bili-suit-diy.js
     interval: 86400
   sparkle.bilibili.json.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/1d335a8188b0126df2148ec778fa04497d1ff3f90afd3678055780c99c0bad1c/scripts/bilibili.json.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/aba5982c696e6049553413bc20d380c4820f65c1f657c0e1219f9d893b2d2fcf/scripts/bilibili.json.js'
     interval: 86400
   sparkle.webpage.bilibili.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/1d335a8188b0126df2148ec778fa04497d1ff3f90afd3678055780c99c0bad1c/scripts/webpage.bilibili.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/aba5982c696e6049553413bc20d380c4820f65c1f657c0e1219f9d893b2d2fcf/scripts/webpage.bilibili.js'
     interval: 86400
   sparkle.bilibili.protobuf.response.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/1d335a8188b0126df2148ec778fa04497d1ff3f90afd3678055780c99c0bad1c/scripts/bilibili.protobuf.response.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/aba5982c696e6049553413bc20d380c4820f65c1f657c0e1219f9d893b2d2fcf/scripts/bilibili.protobuf.response.js'
     interval: 86400
   sparkle.youtube.response.js:
     url: https://raw.githubusercontent.com/Maasea/sgmodule/65075cdb388fc5e3094afd7e7314c67b243f3525/Script/Youtube/youtube.response.js
@@ -253,7 +266,7 @@ script-providers:
     url: https://raw.githubusercontent.com/Maasea/sgmodule/65075cdb388fc5e3094afd7e7314c67b243f3525/Script/Youtube/youtube.request.js
     interval: 86400
   sparkle.12306.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/1d335a8188b0126df2148ec778fa04497d1ff3f90afd3678055780c99c0bad1c/scripts/12306.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/aba5982c696e6049553413bc20d380c4820f65c1f657c0e1219f9d893b2d2fcf/scripts/12306.js'
     interval: 86400
 rules:
 - DOMAIN,bsbsb.top,${args.sponsor_policy}

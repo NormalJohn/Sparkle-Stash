@@ -4,6 +4,7 @@ arguments-version: 1
 arguments:
   port:
     title: port
+    description: 填写 Stash MTProto 服务的监听端口。
     type: input
     default: 5753
     value-type: integer
@@ -11,16 +12,19 @@ arguments:
     maximum: 65535
   secret:
     title: secret
+    description: 填写自己生成的 32 位十六进制 MTProto 密钥，可加 dd 前缀启用随机填充。
     type: input
     required: true
     min-length: 32
     max-length: 34
   ipv6:
     title: ipv6
+    description: 开启后仅连接 Telegram 数据中心的 IPv6 地址；关闭后使用 IPv4。
     type: switch
     default: false
   dc_config_url:
     title: dc-config-url
+    description: 填写用于更新 Telegram 数据中心地址表的 HTTP 或 HTTPS URL。
     type: input
     default: https://ruleset.skk.moe/Internal/mtproto-dc-config.json
     required: true
