@@ -25,7 +25,7 @@ https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/Sparkle-Sta
 
 GitHub Actions 每 6 小时检查上游默认分支。它先生成候选覆写并运行配置、原生 jq 表达式、二进制 mock 和脚本接口回归，再将整套文件一次性推送到 `published` 分支。测试失败时保留上次发布。每个版本使用独立的本地脚本路径，第三方脚本 URL 固定到经过检查的 Git 提交。记录原始上游提交和引用的第三方脚本见 [upstream.json](https://github.com/NormalJohn/Sparkle-Stash/blob/published/upstream.json)。
 
-自动测试使用模拟 Stash 脚本接口，包含 SponsorBlock 的固定响应、gzip 与未压缩 Protobuf、广告过滤及个性化配置。iOS 实机导入、真实客户端流量和第三方服务账户功能需在实际环境验证。第三方大型脚本在 CI 中进行语法检查。
+自动测试使用模拟 Stash 脚本接口，包含 SponsorBlock 的固定响应、gzip 与未压缩 Protobuf、广告过滤及个性化配置。iOS 实机导入、真实客户端流量和第三方服务账户功能需在实际环境验证。YouTube 请求回退和播放器 Protobuf 去广告也有测试。其他第三方大型脚本在 CI 中进行语法检查。
 
 本地运行需要 Python 3、Node 24、Git 和 jq。
 

@@ -132,4 +132,26 @@ const [skin] = await run('bili-suit-diy.js', {
     $persistentStore: { read: key => ({ bili_user_equip: '[{"id":123}]', bili_skin_num: '1' })[key] },
 }, external);
 assert.deepEqual(JSON.parse(skin.body).data, { user_equip: { id: 123 } });
-console.log('Passed Stash API fixtures for gzip/plain protobuf, SponsorBlock, gRPC headers, ads, and preferences.');
+const youtubeHeaders = { 'user-agent': 'com.google.ios.youtube' };
+const [youtubeRequest] = await run('youtube.request.js', {
+    $request: {
+        url: 'https://r1.googlevideo.com/initplayback?id=1&ack=1',
+        method: 'POST', headers: youtubeHeaders, body: new Uint8Array(),
+    },
+    $argument: JSON.stringify({ captionLang: 'ja' }),
+}, external);
+assert.equal(youtubeRequest.response.status, 200);
+assert.equal(youtubeRequest.response.body.byteLength, 0);
+
+const [youtubeResponse] = await run('youtube.response.js', {
+    $request: {
+        url: 'https://youtubei.googleapis.com/youtubei/v1/player',
+        method: 'POST', headers: youtubeHeaders,
+    },
+    $response: { status: 200, headers: {}, body: Uint8Array.of(18, 0, 58, 0) },
+    $argument: JSON.stringify({ blockUpload: false, blockShorts: true, captionLang: 'ja' }),
+}, external);
+assert.ok(youtubeResponse.body instanceof Uint8Array);
+assert.equal(youtubeResponse.body[0], 18);
+assert.equal(youtubeResponse.body[1], youtubeResponse.body.length - 2);
+console.log('Passed Stash API fixtures for gzip/plain protobuf, SponsorBlock, gRPC headers, ads, preferences, and YouTube.');
