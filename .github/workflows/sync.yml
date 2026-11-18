@@ -1,0 +1,63 @@
+name: Sync, test and publish
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+concurrency:
+  group: sparkle-stash-release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install locked dependencies
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          python -m pip install -r requirements.txt
+      - name: Build candidate from upstream
+        run: |
+          git clone --depth 1 https://github.com/kokoryh/Sparkle.git "$RUNNER_TEMP/upstream"
+          python tools/build.py "$RUNNER_TEMP/upstream" "$RUNNER_TEMP/stage" "$RUNNER_TEMP/external" "$GITHUB_REPOSITORY"
+      - name: Validate Stash configuration and script behavior
+        run: |
+          python tests/config.py "$RUNNER_TEMP/upstream" "$RUNNER_TEMP/stage"
+          node tests/runtime.mjs "$RUNNER_TEMP/stage" "$RUNNER_TEMP/external"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tested-overrides
+          path: ${{ runner.temp }}/stage/
+          if-no-files-found: error
+          retention-days: 2
+
+  publish:
+    needs: compatibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: tested-overrides
+          path: ${{ runner.temp }}/tested
+      - name: Publish the exact tested candidate
+        run: bash tools/publish.sh "$RUNNER_TEMP/tested"
