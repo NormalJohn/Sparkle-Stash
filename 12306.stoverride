@@ -17,5 +17,5 @@ http:
   - mobile.12306.cn
 script-providers:
   sparkle.12306.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/aba5982c696e6049553413bc20d380c4820f65c1f657c0e1219f9d893b2d2fcf/scripts/12306.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/80c9a4d1ec19c30af52ac1f152bccfd1a39bbe9aef082ee33fad82f6b1c7c12e/scripts/12306.js'
     interval: 86400

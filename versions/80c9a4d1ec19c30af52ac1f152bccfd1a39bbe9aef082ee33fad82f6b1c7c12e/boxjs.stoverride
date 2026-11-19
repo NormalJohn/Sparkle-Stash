@@ -1,0 +1,17 @@
+name: BoxJs
+desc: https://boxjs.com
+http:
+  force-http-engine:
+  - boxjs.com
+  script:
+  - name: sparkle.chavy.boxjs.js
+    timeout: 120
+    type: request
+    match: https?:\/\/boxjs\.com
+    require-body: true
+  mitm:
+  - boxjs.com
+script-providers:
+  sparkle.chavy.boxjs.js:
+    url: https://raw.githubusercontent.com/chavyleung/scripts/bfab3c906f3d5d126e9094f15730e025f7f32128/box/chavy.boxjs.js
+    interval: 86400

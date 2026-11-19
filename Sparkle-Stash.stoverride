@@ -245,19 +245,19 @@ http:
   - ^https?:\/\/portal\.zjzwfw\.gov\.cn\/app_api\/appHome\/selectStartPic - reject
 script-providers:
   sparkle.bilibili.protobuf.request.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/aba5982c696e6049553413bc20d380c4820f65c1f657c0e1219f9d893b2d2fcf/scripts/bilibili.protobuf.request.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/80c9a4d1ec19c30af52ac1f152bccfd1a39bbe9aef082ee33fad82f6b1c7c12e/scripts/bilibili.protobuf.request.js'
     interval: 86400
   sparkle.bili-suit-diy.js:
     url: https://raw.githubusercontent.com/kokoryh/Script/d8afcfab97fbfb3d017cfdc759ac7c9c8d784b0d/js/bili-suit-diy.js
     interval: 86400
   sparkle.bilibili.json.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/aba5982c696e6049553413bc20d380c4820f65c1f657c0e1219f9d893b2d2fcf/scripts/bilibili.json.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/80c9a4d1ec19c30af52ac1f152bccfd1a39bbe9aef082ee33fad82f6b1c7c12e/scripts/bilibili.json.js'
     interval: 86400
   sparkle.webpage.bilibili.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/aba5982c696e6049553413bc20d380c4820f65c1f657c0e1219f9d893b2d2fcf/scripts/webpage.bilibili.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/80c9a4d1ec19c30af52ac1f152bccfd1a39bbe9aef082ee33fad82f6b1c7c12e/scripts/webpage.bilibili.js'
     interval: 86400
   sparkle.bilibili.protobuf.response.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/aba5982c696e6049553413bc20d380c4820f65c1f657c0e1219f9d893b2d2fcf/scripts/bilibili.protobuf.response.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/80c9a4d1ec19c30af52ac1f152bccfd1a39bbe9aef082ee33fad82f6b1c7c12e/scripts/bilibili.protobuf.response.js'
     interval: 86400
   sparkle.youtube.response.js:
     url: https://raw.githubusercontent.com/Maasea/sgmodule/65075cdb388fc5e3094afd7e7314c67b243f3525/Script/Youtube/youtube.response.js
@@ -266,7 +266,7 @@ script-providers:
     url: https://raw.githubusercontent.com/Maasea/sgmodule/65075cdb388fc5e3094afd7e7314c67b243f3525/Script/Youtube/youtube.request.js
     interval: 86400
   sparkle.12306.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/aba5982c696e6049553413bc20d380c4820f65c1f657c0e1219f9d893b2d2fcf/scripts/12306.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/80c9a4d1ec19c30af52ac1f152bccfd1a39bbe9aef082ee33fad82f6b1c7c12e/scripts/12306.js'
     interval: 86400
 rules:
 - DOMAIN,bsbsb.top,${args.sponsor_policy}

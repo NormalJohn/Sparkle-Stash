@@ -1,5 +1,5 @@
 {
-  "upstream": "0f27e7e96d5cf36a1c700a7d98486a9841ec2919",
+  "upstream": "0eb4fd1c0c30e7aeaab6c70f5ec546a34f3c9d81",
   "external_scripts": {
     "https://raw.githubusercontent.com/kokoryh/Script/master/js/bili-suit-diy.js": [
       "sparkle.bili-suit-diy.js",
