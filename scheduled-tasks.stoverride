@@ -23,7 +23,7 @@ cron:
     cron: ${args.mgclub_cron}
 script-providers:
   sparkle.cron-sync-artifacts.min.js:
-    url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/2a04969ac361f437994d6126165f765aa0d832d6/cron-sync-artifacts.min.js
+    url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/642c228e3311e88cd8028a3d45bbf94f7c11071c/cron-sync-artifacts.min.js
     interval: 86400
   sparkle.ihan.js:
     url: https://raw.githubusercontent.com/kokoryh/Script/d8afcfab97fbfb3d017cfdc759ac7c9c8d784b0d/js/ihan.js
