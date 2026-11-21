@@ -1,0 +1,42 @@
+name: Block
+desc: 屏蔽特定协议 & 端口 & 域名
+arguments-version: 1
+arguments:
+  stun:
+    title: STUN
+    description: 开启后，拦截使用 STUN 协议的连接。
+    type: select
+    default: OR
+    options:
+    - value: OR
+      label: 开启
+    - value: AND
+      label: 关闭
+  ad_domains:
+    title: 通用域名
+    description: 开启后，拦截本覆写列出的 Google 广告域名。
+    type: select
+    default: OR
+    options:
+    - value: OR
+      label: 开启
+    - value: AND
+      label: 关闭
+  system_update:
+    title: 系统更新
+    description: 开启后，拦截本覆写列出的 Apple 系统更新域名。
+    type: select
+    default: AND
+    options:
+    - value: OR
+      label: 开启
+    - value: AND
+      label: 关闭
+rules:
+- AND,((PROTOCOL,STUN),(${args.stun},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT
+- AND,((DOMAIN,www.googleadservices.com),(${args.ad_domains},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT,pre-matching
+- AND,((DOMAIN,googleads.g.doubleclick.net),(${args.ad_domains},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT,pre-matching
+- AND,((DOMAIN,mesu.apple.com),(${args.system_update},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT-DROP
+- AND,((DOMAIN,gdmf.apple.com),(${args.system_update},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT-DROP
+- AND,((DOMAIN,updates-http.cdn-apple.com),(${args.system_update},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT-DROP
+- AND,((DOMAIN,xp.apple.com),(${args.system_update},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT-DROP
