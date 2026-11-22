@@ -1,0 +1,14 @@
+name: AD Block
+desc: 去广告规则合集
+http:
+  url-rewrite:
+  - ^https?:\/\/pan\.baidu\.com\/(act\/(api\/activityentry|v2\/(bchannel|welfare)\/list)|rest\/2\.0\/pcs\/ad) - reject
+  - ^https?:\/\/client\.app\.coc\.10086\.cn\/biz-orange\/DN\/(init\/startInit|emotionMarket) - reject
+  - ^https?:\/\/portal\.zjzwfw\.gov\.cn\/app_api\/appHome\/selectStartPic - reject
+  body-rewrite:
+  - ^https:\/\/res\.kfc\.com\.cn\/CRM\/kfcad\/apphome6\/apphome.*\.json response-jq del(.data.app6_bootStrapAd)
+  mitm:
+  - pan.baidu.com
+  - client.app.coc.10086.cn
+  - portal.zjzwfw.gov.cn
+  - res.kfc.com.cn

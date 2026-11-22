@@ -1,0 +1,182 @@
+name: 哔哩哔哩增强
+desc: 拜托，没有广告的哔哩哔哩真的超酷的
+arguments-version: 1
+arguments:
+  display_up_list:
+    title: 动态最常访问
+    description: auto：仅在列表中有正在直播的 UP 主时显示。show：始终显示。hide：始终隐藏。
+    type: select
+    default: auto
+    options:
+    - value: auto
+    - value: show
+    - value: hide
+  creator_hub:
+    title: 创作中心
+    description: 开启后，在哔哩哔哩个人中心显示创作中心入口。
+    type: switch
+    default: false
+  purify_comment:
+    title: 过滤置顶评论广告
+    description: 开启后，过滤哔哩哔哩评论区中的置顶广告。
+    type: switch
+    default: true
+  optimize_comments:
+    title: 优化评论区加载
+    description: 开启后，通过请求脚本处理视频详情和主评论列表；关闭后仍可进行响应改写。
+    type: switch
+    default: true
+  sponsor_block:
+    title: 空降助手
+    description: 开启后，使用哔哩哔哩 SponsorBlock（空降助手）处理视频的赞助片段。
+    type: switch
+    default: true
+  sponsor_policy:
+    title: 空降助手策略
+    description: 设置空降助手域名 bsbsb.top 的出站策略。填 DIRECT 表示直连（默认）。想走代理时，填写当前 Stash 配置里已有的代理策略组名称，例如「节点选择」（仅当该组实际存在时），名称需完全一致。
+    type: input
+    default: DIRECT
+    required: true
+  block_p2p:
+    title: 屏蔽P2P
+    description: 开启后，拦截哔哩哔哩覆写中的 P2P 目标端口 4480、4483 和 9102。
+    type: select
+    default: OR
+    options:
+    - value: OR
+      label: 开启
+    - value: AND
+      label: 关闭
+  log_level:
+    title: 日志等级
+    description: 1：DEBUG。2：INFO。3：WARN。4：ERROR（默认）。5：OFF（关闭日志）。
+    type: select
+    default: '4'
+    options:
+    - value: '1'
+    - value: '2'
+    - value: '3'
+    - value: '4'
+    - value: '5'
+rules:
+- DOMAIN,bsbsb.top,${args.sponsor_policy}
+- DOMAIN,dns.google,REJECT,pre-matching
+- DOMAIN,api.biliapi.com,REJECT,pre-matching
+- DOMAIN,app.biliapi.com,REJECT,pre-matching
+- DOMAIN,api.biliapi.net,REJECT,pre-matching
+- DOMAIN,app.biliapi.net,REJECT,pre-matching
+- AND,((DOMAIN-SUFFIX,chat.bilibili.com), (OR,((DOMAIN-KEYWORD,stun), (DOMAIN-KEYWORD,tracker), (DOMAIN-KEYWORD,p2p)))),REJECT,pre-matching
+- AND,((DST-PORT,4480),(${args.block_p2p},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT,pre-matching
+- AND,((DST-PORT,4483),(${args.block_p2p},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT,pre-matching
+- AND,((DST-PORT,9102),(${args.block_p2p},((DST-PORT,1),(NOT,((DST-PORT,1)))))),REJECT,pre-matching
+http:
+  mock:
+  - match: ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/list\?
+    headers:
+      content-type: application/json
+    text: '{"code":0,"message":"OK","ttl":1,"data":{"max_time":0,"min_interval":31536000,"pull_interval":31536000,"keep_ids":[],"show":[],"list":[{}],"splash_request_id":""}}'
+  - match: ^https:\/\/ap[ip]\.bilibili\.com\/x\/(?:resource\/(?:top\/activity|patch\/tab(?:\/v2)?)|v2\/search\/square|vip\/ads\/materials)\?
+    headers:
+      content-type: application/json
+    text: '{"code":-404,"message":"-404","ttl":1,"data":null}'
+  - match: ^https:\/\/api\.bilibili\.com\/pgc\/activity\/deliver\/material\/receive\?
+    headers:
+      content-type: application/json
+    text: '{"code":0,"data":{"closeType":"close_win","container":[],"showTime":""},"message":"success"}'
+  - match: ^https:\/\/api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info\?
+    headers:
+      content-type: application/json
+    text: '{}'
+  - match: ^https:\/\/line3-h5-mobile-api\.biligame\.com\/game\/live\/large_card_material\?
+    headers:
+      content-type: application/json
+    text: '{"code":0,"message":"success"}'
+  - match: ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus$
+    headers:
+      content-type: application/grpc
+      grpc-status: '0'
+    base64: AAAAABMKEQgCEgl0ZWVuYWdlcnMgAioA
+  - match: ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.interface\.v1\.Search\/DefaultWords$
+    headers:
+      content-type: application/grpc
+      grpc-status: '0'
+    base64: AAAAACEaHeaQnOe0ouinhumikeOAgeeVquWJp+aIlnVw5Li7KAE=
+  - match: ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.(?:view\.v1\.View\/TFInfo|viewunite\.v1\.View\/(?:PlayPause|ViewEndPage))$
+    headers:
+      content-type: application/grpc
+      grpc-status: '0'
+    base64: AAAAAAA=
+  body-rewrite:
+  - ^http:\/\/[^?]+\/resolve\?host=(?:ap[ip]\.bilibili\.com|grpc\.biliapi\.net|api\.live\.bilibili\.com) response-jq .dns[]? |= (.ips = [] | .ttl = 86400)
+  - ^https:\/\/api\.live\.bilibili\.com\/xlive\/open-interface\/v2\/tracker\/conf\? response-jq .data.domains = ["wss://tracker.chat.bilibili.com"]
+  - ^https:\/\/api\.bilibili\.com\/x\/pd-proxy\/tracker\? response-jq .data[][]? = "stun.chat.bilibili.com:3478"
+  - ^https:\/\/api\.bilibili\.com\/pgc\/view\/v2\/app\/season\? response-jq del(.data.payment)
+  - ^https:\/\/api\.bilibili\.com\/pgc\/page\/channel\? response-jq .data.modules |= map(select(.type != "TIP") | if .type == "BANNER" then .module_data.items |= map(select(.url | startswith("https://www.bilibili.com/blackboard/era/") | not)) else . end)
+  script:
+  - name: sparkle.bilibili.protobuf.request.js
+    timeout: 10
+    type: request
+    match: ^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(?:app\.viewunite\.v1\.View\/View|main\.community\.reply\.v1\.Reply\/MainList)$
+    require-body: true
+    binary-mode: true
+    engine: webkit
+    argument: '{"purifyComment":${args.purify_comment|json},"logLevel":${args.log_level|json},"enabled":${args.optimize_comments|json}}'
+  - name: sparkle.bilibili.protobuf.request.js
+    timeout: 10
+    type: request
+    match: ^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(?:community\.service\.dm\.v1\.DM\/DmSegMobile|app\.view(?:unite)?\.v1\.View\/ViewProgress)$
+    require-body: true
+    binary-mode: true
+    engine: webkit
+    argument: '{"logLevel":${args.log_level|json},"enabled":${args.sponsor_block|json}}'
+  - name: sparkle.bili-suit-diy.js
+    type: response
+    match: ^https:\/\/app\.bilibili\.com\/x\/resource\/show\/skin\?
+    require-body: true
+    engine: webkit
+  - name: sparkle.bilibili.json.js
+    type: response
+    match: ^https:\/\/app\.bilibili\.com\/x\/(?:resource\/show\/tab\/v2|v2\/(?:splash\/(?:show|event\/list2)|feed\/index(?:\/story)?|account\/(?:mine(?:\/ipad)?|myinfo)))\?
+    require-body: true
+    engine: webkit
+    argument: '{"showCreatorHub":${args.creator_hub|json}}'
+  - name: sparkle.bilibili.json.js
+    type: response
+    match: ^https:\/\/api\.live\.bilibili\.com\/xlive\/(?:app-interface\/v2\/index\/feed|app-room\/v1\/index\/getInfoBy(?:Room|User))\?
+    require-body: true
+    engine: webkit
+  - name: sparkle.webpage.bilibili.js
+    type: response
+    match: ^https:\/\/www\.bilibili\.com\/blackboard\/era\/[^?]+\.html\?
+    require-body: true
+    engine: webkit
+  - name: sparkle.bilibili.protobuf.response.js
+    type: response
+    match: ^https:\/\/(?:grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(?:app\.(?:show\.v1\.Popular\/Index|dynamic\.v2\.Dynamic\/DynAll|view(?:unite)?\.v1\.View\/(?:View|ViewProgress|RelatesFeed|AIRelateAsync)|playurl\.v1\.PlayURL\/PlayView|playerunite\.v1\.Player\/PlayViewUnite)|polymer\.app\.search\.v1\.Search\/SearchAll|community\.service\.dm\.v1\.DM\/DmView|main\.community\.reply\.v1\.Reply\/MainList|pgc\.gateway\.player\.v2\.PlayURL\/PlayView)$
+    require-body: true
+    binary-mode: true
+    engine: webkit
+    argument: '{"displayUpList":${args.display_up_list|json},"purifyComment":${args.purify_comment|json},"sponsorBlock":${args.sponsor_block|json},"logLevel":${args.log_level|json}}'
+  mitm:
+  - grpc.biliapi.net
+  - app.bilibili.com
+  - api.bilibili.com
+  - api.live.bilibili.com
+  - www.bilibili.com
+  - line3-h5-mobile-api.biligame.com
+script-providers:
+  sparkle.bilibili.protobuf.request.js:
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/92eb00cfc3d30057276e7117292bc0fe1d5a83e2a0207e9af535b52010ecad94/scripts/bilibili.protobuf.request.js'
+    interval: 86400
+  sparkle.bili-suit-diy.js:
+    url: https://raw.githubusercontent.com/kokoryh/Script/d8afcfab97fbfb3d017cfdc759ac7c9c8d784b0d/js/bili-suit-diy.js
+    interval: 86400
+  sparkle.bilibili.json.js:
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/92eb00cfc3d30057276e7117292bc0fe1d5a83e2a0207e9af535b52010ecad94/scripts/bilibili.json.js'
+    interval: 86400
+  sparkle.webpage.bilibili.js:
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/92eb00cfc3d30057276e7117292bc0fe1d5a83e2a0207e9af535b52010ecad94/scripts/webpage.bilibili.js'
+    interval: 86400
+  sparkle.bilibili.protobuf.response.js:
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/92eb00cfc3d30057276e7117292bc0fe1d5a83e2a0207e9af535b52010ecad94/scripts/bilibili.protobuf.response.js'
+    interval: 86400

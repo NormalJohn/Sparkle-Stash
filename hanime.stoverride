@@ -15,5 +15,5 @@ http:
   - hanime1.me
 script-providers:
   sparkle.webpage.hanime.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/df56806d1f27826230ab502981ebf54b12d463a9c05cff5cc94d80e47113ace9/scripts/webpage.hanime.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/92eb00cfc3d30057276e7117292bc0fe1d5a83e2a0207e9af535b52010ecad94/scripts/webpage.hanime.js'
     interval: 86400
