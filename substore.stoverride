@@ -16,8 +16,8 @@ http:
   - sub.store
 script-providers:
   sparkle.sub-store-1.min.js:
-    url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/b5fe5cf9051dcbd15c39d09350b214b16152ff7c/sub-store-1.min.js
+    url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/80e5f08b945a483d3083539e4759d700a86f0c9d/sub-store-1.min.js
     interval: 86400
   sparkle.sub-store-0.min.js:
-    url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/b5fe5cf9051dcbd15c39d09350b214b16152ff7c/sub-store-0.min.js
+    url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/80e5f08b945a483d3083539e4759d700a86f0c9d/sub-store-0.min.js
     interval: 86400

@@ -1,0 +1,23 @@
+name: Sub-Store
+desc: https://sub.store
+http:
+  script:
+  - name: sparkle.sub-store-1.min.js
+    timeout: 120
+    type: request
+    match: ^https?:\/\/sub\.store\/((download)|api\/(preview|sync|(utils\/node-info)))
+    require-body: true
+  - name: sparkle.sub-store-0.min.js
+    timeout: 120
+    type: request
+    match: ^https?:\/\/sub\.store
+    require-body: true
+  mitm:
+  - sub.store
+script-providers:
+  sparkle.sub-store-1.min.js:
+    url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/80e5f08b945a483d3083539e4759d700a86f0c9d/sub-store-1.min.js
+    interval: 86400
+  sparkle.sub-store-0.min.js:
+    url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/80e5f08b945a483d3083539e4759d700a86f0c9d/sub-store-0.min.js
+    interval: 86400

@@ -1,0 +1,19 @@
+name: Hanime去广告
+desc: https://hanime1.me
+rules:
+- DOMAIN-SUFFIX,jads.co,REJECT,pre-matching
+- DOMAIN-SUFFIX,juicyads.com,REJECT,pre-matching
+- DOMAIN-SUFFIX,mnaspm.com,REJECT,pre-matching
+http:
+  script:
+  - name: sparkle.webpage.hanime.js
+    type: response
+    match: ^https:\/\/hanime1\.me\/(?!(favicon|css|js|cdn-cgi|load))
+    require-body: true
+    engine: webkit
+  mitm:
+  - hanime1.me
+script-providers:
+  sparkle.webpage.hanime.js:
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/3e4a8ae8f4ba16f3ff62df149a6b4c5c3ea11fe8a3b29e3eb30fc2aa4aea2787/scripts/webpage.hanime.js'
+    interval: 86400
