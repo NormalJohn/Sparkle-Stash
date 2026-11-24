@@ -1,0 +1,15 @@
+name: Development Mode
+desc: Redirect to the specified refName
+arguments-version: 1
+arguments:
+  refname:
+    title: refname
+    description: 原 Sparkle 资源重定向到的 Git 引用，例如 refs/heads/dev。
+    type: input
+    default: refs/heads/dev
+    required: true
+http:
+  url-rewrite:
+  - ^https:\/\/raw\.githubusercontent\.com\/kokoryh\/Sparkle\/refs\/heads\/master https://raw.githubusercontent.com/kokoryh/Sparkle/${args.refname} 302
+  mitm:
+  - raw.githubusercontent.com

@@ -166,17 +166,17 @@ http:
   - line3-h5-mobile-api.biligame.com
 script-providers:
   sparkle.bilibili.protobuf.request.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/05265306c6a0e0695bfa24c333cc5d180e70126ef6078e1fb7e2ea88a77352bf/scripts/bilibili.protobuf.request.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/0011e296e64ea94f0eac3dd9a4ee2b59662e13dee587695e623165757182baa5/scripts/bilibili.protobuf.request.js'
     interval: 86400
   sparkle.bili-suit-diy.js:
     url: https://raw.githubusercontent.com/kokoryh/Script/d8afcfab97fbfb3d017cfdc759ac7c9c8d784b0d/js/bili-suit-diy.js
     interval: 86400
   sparkle.bilibili.json.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/05265306c6a0e0695bfa24c333cc5d180e70126ef6078e1fb7e2ea88a77352bf/scripts/bilibili.json.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/0011e296e64ea94f0eac3dd9a4ee2b59662e13dee587695e623165757182baa5/scripts/bilibili.json.js'
     interval: 86400
   sparkle.webpage.bilibili.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/05265306c6a0e0695bfa24c333cc5d180e70126ef6078e1fb7e2ea88a77352bf/scripts/webpage.bilibili.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/0011e296e64ea94f0eac3dd9a4ee2b59662e13dee587695e623165757182baa5/scripts/webpage.bilibili.js'
     interval: 86400
   sparkle.bilibili.protobuf.response.js:
-    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/05265306c6a0e0695bfa24c333cc5d180e70126ef6078e1fb7e2ea88a77352bf/scripts/bilibili.protobuf.response.js'
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/0011e296e64ea94f0eac3dd9a4ee2b59662e13dee587695e623165757182baa5/scripts/bilibili.protobuf.response.js'
     interval: 86400
