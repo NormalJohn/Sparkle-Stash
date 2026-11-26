@@ -1,0 +1,21 @@
+name: 12306去广告
+desc: 移除开屏广告，精简首页
+http:
+  script:
+  - name: sparkle.12306.js
+    type: request
+    match: ^https:\/\/ad\.12306\.cn\/ad\/ser\/getAdList$
+    require-body: true
+    engine: webkit
+  - name: sparkle.12306.js
+    type: request
+    match: ^https:\/\/mobile\.12306\.cn\/otsmobile\/app\/mgs\/mgw\.htm$
+    require-body: false
+    engine: webkit
+  mitm:
+  - ad.12306.cn
+  - mobile.12306.cn
+script-providers:
+  sparkle.12306.js:
+    url: 'https://raw.githubusercontent.com/NormalJohn/Sparkle-Stash/published/versions/5a046ecc8f6c9fa4984ada3a2a227744d6a7f3a49ddaeaff6d39bd9919fde53c/scripts/12306.js'
+    interval: 86400

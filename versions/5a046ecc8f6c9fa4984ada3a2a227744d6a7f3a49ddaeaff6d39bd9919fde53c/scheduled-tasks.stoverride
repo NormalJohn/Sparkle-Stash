@@ -1,0 +1,30 @@
+name: 定时任务
+desc: Scheduled tasks
+arguments-version: 1
+arguments:
+  substore_cron:
+    title: SubStore同步
+    description: 填写五段式 Cron 表达式。默认每天 05:00 执行 Sub-Store 同步。
+    type: input
+    default: 0 5 * * *
+    required: true
+  mgclub_cron:
+    title: 毛怪俱乐部签到
+    description: 填写五段式 Cron 表达式。默认每天 02:55 执行签到。
+    type: input
+    default: 55 2 * * *
+    required: true
+cron:
+  script:
+  - name: sparkle.cron-sync-artifacts.min.js
+    timeout: 120
+    cron: ${args.substore_cron}
+  - name: sparkle.ihan.js
+    cron: ${args.mgclub_cron}
+script-providers:
+  sparkle.cron-sync-artifacts.min.js:
+    url: https://raw.githubusercontent.com/sub-store-org/Sub-Store/fd87347009315d83dbab3b6cf1b8cde295bd53eb/cron-sync-artifacts.min.js
+    interval: 86400
+  sparkle.ihan.js:
+    url: https://raw.githubusercontent.com/kokoryh/Script/d8afcfab97fbfb3d017cfdc759ac7c9c8d784b0d/js/ihan.js
+    interval: 86400

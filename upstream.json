@@ -11,7 +11,7 @@
     ],
     "https://raw.githubusercontent.com/sub-store-org/Sub-Store/release/cron-sync-artifacts.min.js": [
       "sparkle.cron-sync-artifacts.min.js",
-      "https://raw.githubusercontent.com/sub-store-org/Sub-Store/be926f7305e81a614bf2cabc6babd1fa683dab9f/cron-sync-artifacts.min.js"
+      "https://raw.githubusercontent.com/sub-store-org/Sub-Store/fd87347009315d83dbab3b6cf1b8cde295bd53eb/cron-sync-artifacts.min.js"
     ],
     "https://raw.githubusercontent.com/kokoryh/Script/master/js/ihan.js": [
       "sparkle.ihan.js",
@@ -19,11 +19,11 @@
     ],
     "https://raw.githubusercontent.com/sub-store-org/Sub-Store/release/sub-store-1.min.js": [
       "sparkle.sub-store-1.min.js",
-      "https://raw.githubusercontent.com/sub-store-org/Sub-Store/be926f7305e81a614bf2cabc6babd1fa683dab9f/sub-store-1.min.js"
+      "https://raw.githubusercontent.com/sub-store-org/Sub-Store/fd87347009315d83dbab3b6cf1b8cde295bd53eb/sub-store-1.min.js"
     ],
     "https://raw.githubusercontent.com/sub-store-org/Sub-Store/release/sub-store-0.min.js": [
       "sparkle.sub-store-0.min.js",
-      "https://raw.githubusercontent.com/sub-store-org/Sub-Store/be926f7305e81a614bf2cabc6babd1fa683dab9f/sub-store-0.min.js"
+      "https://raw.githubusercontent.com/sub-store-org/Sub-Store/fd87347009315d83dbab3b6cf1b8cde295bd53eb/sub-store-0.min.js"
     ],
     "https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js": [
       "sparkle.youtube.response.js",
